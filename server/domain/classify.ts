@@ -2,7 +2,7 @@ import type { ServiceStage, ExpenseCategory } from './types'
 
 const STAGE_RULES: Array<{ stage: ServiceStage; re: RegExp }> = [
   { stage: 'ads', re: /директ|контекстн|реклам|объявлени/i },
-  { stage: 'seo', re: /\bseo\b|поисков\w* продвижени/i },
+  { stage: 'seo', re: /\bseo\b|поисков[а-яёА-ЯЁ]* продвижени/i },
   { stage: 'support', re: /сопровождени|поддержк|обслуживани сайт/i },
   { stage: 'development', re: /разработк|доработк|вёрстк|верстк|модул/i },
   { stage: 'content', re: /публикаци|материал|контент|наполнени|копирайт/i },
@@ -15,7 +15,7 @@ export function classifyServiceStage(purpose: string): ServiceStage {
   return 'other'
 }
 
-const TAX_RE = /ндфл|енс|единый налог|страхов\w* взнос|пени|налог/i
+const TAX_RE = /ндфл|енс|единый налог|страхов[а-яёА-ЯЁ]* взнос|пени|налог/i
 
 /** Categorize an outgoing payment. */
 export function classifyExpenseCategory(purpose: string, payeeName = ''): ExpenseCategory {
