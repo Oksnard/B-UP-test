@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: false },
   css: ['~/assets/main.css'],
   runtimeConfig: {
-    databaseUrl: process.env.DATABASE_URL || 'file:./prisma/dev.db',
+    databaseUrl: process.env.DATABASE_URL || 'file:./dev.db',
   },
   nitro: { preset: process.env.NITRO_PRESET || undefined },
 })
