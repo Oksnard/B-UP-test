@@ -1,0 +1,72 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Local default SQLite. On Vercel set provider to postgresql via env on the prod branch.
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Counterparty {
+  id            String    @id @default(cuid())
+  name          String
+  inn           String
+  kpp           String?
+  ogrn          String?
+  bankAccount   String?
+  bankName      String?
+  contactPerson String?
+  projects      Project[]
+  payments      Payment[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  @@unique([inn, name])
+}
+
+model Project {
+  id             String       @id @default(cuid())
+  name           String
+  description    String?
+  status         String       @default("active") // active | closed
+  counterpartyId String
+  counterparty   Counterparty @relation(fields: [counterpartyId], references: [id])
+  payments       Payment[]
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Payment {
+  id              String       @id @default(cuid())
+  date            DateTime
+  direction       String       // in | out
+  amount          Int          // kopecks
+  currency        String       @default("RUB")
+  purpose         String
+  serviceStage    String       @default("other") // development|support|ads|seo|content|design|other
+  expenseCategory String?      // tax|subcontractor|fee|other (only when direction=out)
+  invoiceNumber   String?
+  contractNumber  String?
+  docNumber       String?
+  sourceRef       String       @unique
+  counterpartyId  String
+  counterparty    Counterparty @relation(fields: [counterpartyId], references: [id])
+  projectId       String?
+  project         Project?     @relation(fields: [projectId], references: [id])
+  act             Act?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
+
+model Act {
+  id             String   @id @default(cuid())
+  paymentId      String   @unique
+  payment        Payment  @relation(fields: [paymentId], references: [id])
+  isSent         Boolean  @default(false)
+  sentAt         DateTime?
+  isSigned       Boolean  @default(false)
+  signedAt       DateTime?
+  managerComment String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
