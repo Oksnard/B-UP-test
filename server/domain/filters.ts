@@ -17,6 +17,7 @@ export interface FilterableRow {
   direction: Direction
   serviceStage: ServiceStage
   counterpartyId?: string | null
+  counterpartyName?: string | null
   projectId?: string | null
   purpose: string
   status?: ActStatus | string
@@ -34,6 +35,9 @@ export function matchesPaymentFilters(row: FilterableRow, f: PaymentFilters): bo
   if (f.actStatus && row.status !== f.actStatus) return false
   if (f.from && toTime(row.date) < toTime(f.from)) return false
   if (f.to && toTime(row.date) > toTime(`${f.to}T23:59:59`)) return false
-  if (f.q && !row.purpose.toLowerCase().includes(f.q.toLowerCase())) return false
+  if (f.q) {
+    const hay = (row.purpose + ' ' + (row.counterpartyName ?? '')).toLowerCase()
+    if (!hay.includes(f.q.toLowerCase())) return false
+  }
   return true
 }

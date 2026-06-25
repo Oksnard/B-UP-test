@@ -2,17 +2,20 @@
 const api = useApi()
 const filters = ref<Record<string, string>>({})
 const projects = ref<{ id: string; name: string }[]>([])
+const counterparties = ref<{ id: string; name: string }[]>([])
 const summary = ref<any>(null)
 const payments = ref<any[]>([])
 
 async function load() {
-  const [s, p, pr] = await Promise.all([
+  const [s, p, pr, cp] = await Promise.all([
     api.getSummary(filters.value),
     api.getPayments(filters.value),
     api.getProjects(),
+    api.getCounterparties(),
   ])
   summary.value = s; payments.value = p
   projects.value = pr.map((x: any) => ({ id: x.id, name: x.name }))
+  counterparties.value = cp.map((x: any) => ({ id: x.id, name: x.name }))
 }
 function onFilter(f: Record<string, string>) { filters.value = f; load() }
 async function onToggle({ id, patch }: { id: string; patch: Record<string, any> }) {
@@ -23,7 +26,7 @@ await load()
 <template>
   <div>
     <SummaryCards :summary="summary" />
-    <FiltersBar :projects="projects" @change="onFilter" />
+    <FiltersBar :projects="projects" :counterparties="counterparties" @change="onFilter" />
     <PaymentsTable :rows="payments" @toggle="onToggle" />
   </div>
 </template>

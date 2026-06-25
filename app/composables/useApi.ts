@@ -10,7 +10,8 @@ export function useApi() {
   const getPayments = (params: Record<string, any>) => unwrap<any[]>($fetch('/api/payments', { params }))
   const getExpenses = (params: Record<string, any>) => unwrap<any[]>($fetch('/api/expenses', { params }))
   const getProjects = () => unwrap<any[]>($fetch('/api/projects'))
+  const getCounterparties = () => unwrap<any[]>($fetch('/api/counterparties'))
   const patchAct = (id: string, body: Record<string, any>) =>
     unwrap<any>($fetch(`/api/acts/${id}`, { method: 'PATCH', body }))
-  return { getSummary, getPayments, getExpenses, getProjects, patchAct }
+  return { getSummary, getPayments, getExpenses, getProjects, getCounterparties, patchAct }
 }

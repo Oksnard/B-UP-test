@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { SERVICE_STAGE_LABELS, ACT_STATUS_LABELS } from '~~/server/domain/types'
-const props = defineProps<{ projects: { id: string; name: string }[] }>()
+const props = defineProps<{
+  projects: { id: string; name: string }[]
+  counterparties: { id: string; name: string }[]
+}>()
 const emit = defineEmits<{ change: [Record<string, string>] }>()
-const f = reactive<Record<string, string>>({ project: '', from: '', to: '', stage: '', actStatus: '', q: '' })
+const f = reactive<Record<string, string>>({ project: '', counterparty: '', from: '', to: '', stage: '', actStatus: '', q: '' })
 const stages = Object.entries(SERVICE_STAGE_LABELS)
 const statuses = Object.entries(ACT_STATUS_LABELS)
 function apply() {
@@ -13,6 +16,8 @@ function reset() { Object.keys(f).forEach((k) => (f[k] = '')); apply() }
 <template>
   <section class="filters card">
     <input v-model="f.q" placeholder="Поиск по назначению…" @keyup.enter="apply" />
+    <select v-model="f.counterparty"><option value="">Все юрлица</option>
+      <option v-for="c in counterparties" :key="c.id" :value="c.id">{{ c.name }}</option></select>
     <select v-model="f.project"><option value="">Все проекты</option>
       <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option></select>
     <select v-model="f.stage"><option value="">Все услуги</option>

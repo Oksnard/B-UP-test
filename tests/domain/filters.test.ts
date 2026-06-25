@@ -30,6 +30,10 @@ describe('matchesPaymentFilters', () => {
     expect(matchesPaymentFilters(row(), { q: 'директ' })).toBe(true)
     expect(matchesPaymentFilters(row(), { q: 'seo' })).toBe(false)
   })
+  it('searches counterpartyName case-insensitively', () => {
+    expect(matchesPaymentFilters(row({ counterpartyName: 'ООО "Ледник-Старт"' }), { q: 'ледник' })).toBe(true)
+    expect(matchesPaymentFilters(row({ counterpartyName: 'ООО "Ледник-Старт"' }), { q: 'другой' })).toBe(false)
+  })
   it('filters by act status', () => {
     expect(matchesPaymentFilters(row({ status: 'CLOSED' }), { actStatus: 'CLOSED' })).toBe(true)
     expect(matchesPaymentFilters(row({ status: 'NOT_SENT' }), { actStatus: 'CLOSED' })).toBe(false)
