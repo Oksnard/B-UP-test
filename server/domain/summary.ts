@@ -6,6 +6,7 @@ export interface SummaryRow {
   projectId?: string | null
   status?: ActStatus | string
   isSent: boolean
+  isSigned: boolean
   expenseCategory?: ExpenseCategory | null
 }
 
@@ -41,10 +42,10 @@ export function buildSummary(rows: SummaryRow[]): Summary {
     s.totalIncome += r.amount
     s.paymentsCount += 1
     if (r.projectId) projects.add(r.projectId)
-    if (r.status === 'CLOSED') s.closedActsAmount += r.amount
+    if (r.isSent && r.isSigned) s.closedActsAmount += r.amount
     else s.openActsAmount += r.amount
     if (!r.isSent) s.withoutSentActCount += 1
-    if (r.status === 'AWAITING_SIGNATURE') s.sentNotSignedCount += 1
+    if (r.isSent && !r.isSigned) s.sentNotSignedCount += 1
   }
   s.projectsCount = projects.size
   return s

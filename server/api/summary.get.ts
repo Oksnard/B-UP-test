@@ -11,7 +11,7 @@ export default defineEventHandler(async (event) => {
   const rows = await listPayments(rest)
   return ok(buildSummary(rows.map((r) => ({
     direction: r.direction, amount: r.amount, projectId: r.projectId,
-    status: r.status, isSent: r.act?.isSent ?? false,
+    status: r.status, isSent: r.act?.isSent ?? false, isSigned: r.act?.isSigned ?? false,
     expenseCategory: (r.expenseCategory ?? undefined) as any,
   }))))
 })

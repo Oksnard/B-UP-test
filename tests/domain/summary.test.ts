@@ -2,10 +2,10 @@ import { describe, it, expect } from 'vitest'
 import { buildSummary, type SummaryRow } from '~~/server/domain/summary'
 
 const rows: SummaryRow[] = [
-  { direction: 'in', amount: 3_300_000, projectId: 'p1', status: 'CLOSED', isSent: true },
-  { direction: 'in', amount: 5_600_000, projectId: 'p1', status: 'AWAITING_SIGNATURE', isSent: true },
-  { direction: 'in', amount: 819_000,   projectId: 'p2', status: 'NOT_SENT', isSent: false },
-  { direction: 'out', amount: 2_080_000, projectId: null, status: undefined, isSent: false, expenseCategory: 'tax' },
+  { direction: 'in', amount: 3_300_000, projectId: 'p1', status: 'CLOSED',              isSent: true,  isSigned: true },
+  { direction: 'in', amount: 5_600_000, projectId: 'p1', status: 'AWAITING_SIGNATURE',  isSent: true,  isSigned: false },
+  { direction: 'in', amount: 819_000,   projectId: 'p2', status: 'NOT_SENT',            isSent: false, isSigned: false },
+  { direction: 'out', amount: 2_080_000, projectId: null, status: undefined,            isSent: false, isSigned: false, expenseCategory: 'tax' },
 ]
 
 describe('buildSummary', () => {
