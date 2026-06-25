@@ -8,6 +8,13 @@ async function main() {
   const raw = await readFile('data/normalized.json', 'utf8')
   const data = JSON.parse(raw) as Normalized
 
+  // Anchor payment dates so the newest payment is ~10 days before today.
+  // This ensures all four act states (NOT_SENT, AWAITING_SIGNATURE, CLOSED,
+  // NEEDS_ATTENTION) appear in the demo regardless of when the seed is run.
+  const maxDate = Math.max(...data.payments.map((p) => new Date(p.date).getTime()))
+  const shiftMs = (Date.now() - 10 * 86_400_000) - maxDate
+  const shiftDate = (iso: string) => new Date(new Date(iso).getTime() + shiftMs)
+
   const cpIdByKey = new Map<string, string>()
   for (const c of data.counterparties) {
     const row = await prisma.counterparty.upsert({
@@ -40,7 +47,7 @@ async function main() {
       where: { sourceRef: pay.sourceRef },
       update: {},
       create: {
-        date: new Date(pay.date),
+        date: shiftDate(pay.date),
         direction: pay.direction,
         amount: pay.amount,
         currency: pay.currency,
@@ -67,7 +74,7 @@ async function main() {
         paymentId: payment.id,
         isSent: a.isSent,
         isSigned: a.isSigned,
-        sentAt: a.isSent ? payment.date : null,
+        sentAt: a.isSent ? payment.date : null,   // payment.date is already the shifted date
         signedAt: a.isSigned ? payment.date : null,
         managerComment: a.managerComment ?? null,
       },
