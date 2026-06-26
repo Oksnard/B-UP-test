@@ -26,6 +26,7 @@ model Counterparty {
 
 model Project {
   id             String       @id @default(cuid())
+  sourceKey      String       @unique // stable import key (counterpartyInn::projectName) for idempotent seeding
   name           String
   description    String?
   status         String       @default("active") // active | closed

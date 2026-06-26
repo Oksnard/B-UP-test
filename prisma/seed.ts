@@ -34,8 +34,10 @@ async function main() {
   for (const p of data.projects) {
     const cpId = cpIdByKey.get(p.counterpartyKey)
     if (!cpId) continue
-    const row = await prisma.project.create({
-      data: { name: p.name, counterpartyId: cpId },
+    const row = await prisma.project.upsert({
+      where: { sourceKey: p.key },
+      update: { name: p.name, counterpartyId: cpId },
+      create: { sourceKey: p.key, name: p.name, counterpartyId: cpId },
     })
     projIdByKey.set(p.key, row.id)
   }
