@@ -40,10 +40,11 @@ const cards = computed(() => {
 }
 .metric {
   position: relative;
+  container-type: inline-size;
   background: var(--paper);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 16px 16px 17px;
+  padding: 18px 20px 19px 22px;
   box-shadow: var(--shadow-sm);
   overflow: hidden;
 }
@@ -69,13 +70,14 @@ const cards = computed(() => {
   line-height: 1.35;
 }
 .metric__value {
-  font-size: clamp(19px, 2.4vw, 23px);
+  font-size: clamp(13px, 8cqi, 20px);
   font-weight: 600;
   color: var(--ink);
-  line-height: 1.1;
+  line-height: 1.15;
+  white-space: nowrap;
 }
 @media (max-width: 520px) {
   .cards { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-  .metric { padding: 13px 13px 14px; }
+  .metric { padding: 15px 15px 16px 18px; }
 }
 </style>
