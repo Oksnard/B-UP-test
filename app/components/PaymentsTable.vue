@@ -5,29 +5,38 @@ const emit = defineEmits<{ toggle: [{ id: string; patch: Record<string, any> }] 
 const { money, date, stageLabel } = useFormat()
 </script>
 <template>
-  <table>
-    <thead><tr>
-      <th>Дата</th><th>Плательщик</th><th>Проект</th><th>Сумма</th><th>Назначение</th>
-      <th>Этап</th><th>Отправлен</th><th>Подписан</th><th>Статус</th><th>Комментарий</th>
-    </tr></thead>
-    <tbody>
-      <tr v-for="r in rows" :key="r.id">
-        <td>{{ date(r.date) }}</td>
-        <td>{{ r.counterpartyName }}</td>
-        <td>{{ r.projectName || '—' }}</td>
-        <td>{{ money(r.amount) }}</td>
-        <td class="purpose">{{ r.purpose }}</td>
-        <td>{{ stageLabel(r.serviceStage) }}</td>
-        <td><input type="checkbox" :checked="r.act?.isSent"
-          @change="emit('toggle', { id: r.act.id, patch: { isSent: ($event.target as HTMLInputElement).checked } })"
-          :disabled="!r.act" /></td>
-        <td><input type="checkbox" :checked="r.act?.isSigned"
-          @change="emit('toggle', { id: r.act.id, patch: { isSigned: ($event.target as HTMLInputElement).checked } })"
-          :disabled="!r.act" /></td>
-        <td><ActStatusBadge :status="r.status" /></td>
-        <td>{{ r.act?.managerComment || '—' }}</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="table-scroll"><div>
+    <table>
+      <thead><tr>
+        <th>Дата</th><th>Плательщик</th><th>Проект</th><th>Сумма</th><th>Назначение</th>
+        <th>Этап</th><th>Отпр.</th><th>Подп.</th><th>Статус</th><th>Комментарий</th>
+      </tr></thead>
+      <tbody>
+        <tr v-if="!rows.length"><td class="empty" colspan="10">Нет оплат по заданным фильтрам</td></tr>
+        <tr v-for="r in rows" :key="r.id">
+          <td data-label="Дата" class="num-cell">{{ date(r.date) }}</td>
+          <td data-label="Плательщик">{{ r.counterpartyName }}</td>
+          <td data-label="Проект">{{ r.projectName || '—' }}</td>
+          <td data-label="Сумма" class="amount">{{ money(r.amount) }}</td>
+          <td data-label="Назначение" class="purpose">{{ r.purpose }}</td>
+          <td data-label="Этап">{{ stageLabel(r.serviceStage) }}</td>
+          <td data-label="Акт отправлен">
+            <input class="cbx" type="checkbox" :checked="r.act?.isSent" :disabled="!r.act"
+              @change="emit('toggle', { id: r.act.id, patch: { isSent: ($event.target as HTMLInputElement).checked } })" />
+          </td>
+          <td data-label="Акт подписан">
+            <input class="cbx" type="checkbox" :checked="r.act?.isSigned" :disabled="!r.act"
+              @change="emit('toggle', { id: r.act.id, patch: { isSigned: ($event.target as HTMLInputElement).checked } })" />
+          </td>
+          <td data-label="Статус"><ActStatusBadge :status="r.status" /></td>
+          <td data-label="Комментарий" class="comment">{{ r.act?.managerComment || '—' }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div></div>
 </template>
-<style scoped>.purpose{max-width:280px;color:var(--muted);font-size:13px}</style>
+<style scoped>
+.comment { color: var(--muted); font-size: 13px; }
+.empty { text-align: center; color: var(--muted); padding: 28px 16px; }
+.empty::before { display: none; }
+</style>

@@ -15,24 +15,50 @@ function reset() { Object.keys(f).forEach((k) => (f[k] = '')); apply() }
 </script>
 <template>
   <section class="filters card">
-    <input v-model="f.q" placeholder="Поиск по назначению…" @keyup.enter="apply" />
-    <select v-model="f.counterparty"><option value="">Все юрлица</option>
+    <input class="field filters__search" v-model="f.q" placeholder="Поиск по назначению или клиенту…" @keyup.enter="apply" />
+    <select class="field" v-model="f.counterparty"><option value="">Все юрлица</option>
       <option v-for="c in counterparties" :key="c.id" :value="c.id">{{ c.name }}</option></select>
-    <select v-model="f.project"><option value="">Все проекты</option>
+    <select class="field" v-model="f.project"><option value="">Все проекты</option>
       <option v-for="p in projects" :key="p.id" :value="p.id">{{ p.name }}</option></select>
-    <select v-model="f.stage"><option value="">Все услуги</option>
+    <select class="field" v-model="f.stage"><option value="">Все услуги</option>
       <option v-for="[k, label] in stages" :key="k" :value="k">{{ label }}</option></select>
-    <select v-model="f.actStatus"><option value="">Любой статус</option>
+    <select class="field" v-model="f.actStatus"><option value="">Любой статус</option>
       <option v-for="[k, label] in statuses" :key="k" :value="k">{{ label }}</option></select>
-    <label>с <input type="date" v-model="f.from" /></label>
-    <label>по <input type="date" v-model="f.to" /></label>
-    <button @click="apply">Применить</button>
-    <button class="ghost" @click="reset">Сбросить</button>
+    <label class="filters__date"><span>с</span><input class="field" type="date" v-model="f.from" /></label>
+    <label class="filters__date"><span>по</span><input class="field" type="date" v-model="f.to" /></label>
+    <div class="filters__actions">
+      <button class="btn" @click="apply">Применить</button>
+      <button class="btn btn--ghost" @click="reset">Сбросить</button>
+    </div>
   </section>
 </template>
 <style scoped>
-.filters { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:16px; }
-.filters input, .filters select { padding:7px 9px; border:1px solid var(--line); border-radius:8px; font-size:14px; }
-.filters button { padding:7px 14px; border:0; border-radius:8px; background:var(--info); color:#fff; font-weight:600; cursor:pointer; }
-.filters button.ghost { background:#eef0f3; color:var(--ink); }
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.filters .field { flex: 1 1 150px; min-width: 0; }
+.filters__search { flex: 2 1 230px; }
+.filters__date {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1 1 150px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.filters__date .field { flex: 1; min-width: 0; }
+.filters__actions { display: flex; gap: 8px; flex: 1 1 auto; }
+.filters__actions .btn { flex: 1 1 auto; }
+
+@media (max-width: 640px) {
+  .filters { flex-direction: column; align-items: stretch; gap: 9px; }
+  .filters .field,
+  .filters__search,
+  .filters__date { flex: 1 1 auto; width: 100%; }
+  .filters .field, .btn { height: 44px; }
+}
 </style>

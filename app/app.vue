@@ -1,7 +1,10 @@
 <template>
   <div class="app">
     <header class="app__header">
-      <h1>Учёт оплат и закрывающих документов</h1>
+      <div class="app__brand">
+        <span class="app__brand-mark" aria-hidden="true">Б</span>
+        <h1 class="app__title">Учёт оплат и закрывающих документов</h1>
+      </div>
       <nav class="app__nav">
         <NuxtLink to="/">Оплаты</NuxtLink>
         <NuxtLink to="/projects">Проекты</NuxtLink>
